@@ -1,0 +1,33 @@
+name: LMS Backend CI/CD Pipeline
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Show Project Structure
+        run: ls -R
+
+      - name: Run FastAPI App (Build Test)
+        run: |
+          uvicorn app.main:app --host 127.0.0.1 --port 8000 &
+          sleep 5
